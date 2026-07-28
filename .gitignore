@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+
+# Çıktılar
+*.xlsx
+*.png
+
+# Playwright
+playwright-report/
+test-results/
+
+# VS Code
+.vscode/
+
+# İşletim sistemi
+.DS_Store
+Thumbs.db
