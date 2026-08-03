@@ -1,0 +1,40 @@
+name: Daily Weather
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # Her gün 07:00 UTC = Türkiye saati ile 10:00
+    - cron: "0 7 * * *"
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository'yi indir
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Gerekli paketleri yükle
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Hava durumunu çek
+        run: python app.py
+
+      - name: weather.xlsx dosyasını commit et
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add weather.xlsx
+
+          git diff --cached --quiet || git commit -m "Daily weather update"
+
+          git push
