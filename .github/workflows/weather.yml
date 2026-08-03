@@ -1,10 +1,12 @@
 name: Daily Weather
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
 
   schedule:
-    # Her gün 07:00 UTC = Türkiye saati ile 10:00
     - cron: "0 7 * * *"
 
 jobs:
@@ -37,4 +39,4 @@ jobs:
 
           git diff --cached --quiet || git commit -m "Daily weather update"
 
-          git push
+          git push origin main
