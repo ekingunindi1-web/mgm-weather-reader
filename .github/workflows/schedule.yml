@@ -1,0 +1,41 @@
+name: MGM Weather Reader (Günlük)
+
+on:
+  schedule:
+    # 07:30 UTC = 10:30 Türkiye saati (Türkiye yıl boyu UTC+3)
+    - cron: '30 7 * * *'
+  workflow_dispatch:  # İstersen manuel de tetikleyebilmen için
+
+jobs:
+  run-and-mail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo'yu çek
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Bağımlılıkları kur
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Uygulamayı çalıştır
+        run: python app.py
+
+      - name: Sonucu mail ile gönder
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "MGM Hava Durumu Raporu - ${{ github.run_id }}"
+          to: ${{ secrets.MAIL_USERNAME }}
+          bcc: ${{ secrets.MAIL_TO }}
+          from: MGM Weather Reader
+          body: "Günlük hava durumu raporu ektedir."
+          attachments: weather.xlsx
