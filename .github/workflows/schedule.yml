@@ -1,10 +1,7 @@
 name: MGM Weather Reader (Günlük)
 
 on:
-  schedule:
-    # 06:53 UTC ≈ 09:53 Türkiye saati (tam saat başı yerine az yoğun bir dakika seçildi, gecikme riskini azaltmak için)
-    - cron: '53 6 * * *'
-  workflow_dispatch:  # İstersen manuel de tetikleyebilmen için
+  workflow_dispatch:  # Harici cron servisi (cron-job.org) bu workflow'u API üzerinden tetikleyecek
 
 jobs:
   run-and-mail:
